@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React from 'react';
+import Login from './login';
+import HomePage from './homePage';
+import Logout from './logout';
+import Register from './register';
+const App = () => {
+  const isAuthenticated = () => {
+    // Check if token exists in localStorage
+    return localStorage.getItem('token') !== null;
+  };
 
-function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes accessible to all */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        {/* Protected routes accessible only to authenticated users */}
+        <Route path="/" element={isAuthenticated() ? <Navigate to="/HomePage" /> : <Navigate to="/login" />} />
+        <Route path="/HomePage" element={isAuthenticated() ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/logout" element={<Logout />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
